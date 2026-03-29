@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Attendees for {{ event.title }} | EventReserva{% endblock %}
+
+{% block body %}
+<div class="er-admin animate-up">
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ path('admin_dashboard') }}" style="color: var(--amber); text-decoration: none; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    <div class="er-header" style="background: transparent; border: none; padding: 0; margin-bottom: 3rem;">
+        <div>
+            <p class="er-eyebrow">⬡ Attendance Records</p>
+            <h1 class="er-title">{{ event.title }} <em>Reservations</em></h1>
+            <p style="color: var(--text-secondary); font-weight: 500;">Complete list of confirmed attendees for this event.</p>
+        </div>
+        <div class="er-stat" style="padding: 1rem 2rem; min-width: 200px; display: flex; flex-direction: column; align-items: flex-end;">
+            <div class="er-stat-value" style="font-size: 2rem;">{{ reservations|length }}</div>
+            <div class="er-stat-label">Confirmed Seats</div>
+        </div>
+    </div>
+
+    <div class="er-card">
+        <table class="er-table">
+            <thead>
+                <tr>
+                    <th>Attendee Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th style="text-align: right;">Registration Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations %}
+                    <tr>
+                        <td style="font-weight: 700; color: var(--text-primary);">{{ reservation.name }}</td>
+                        <td>{{ reservation.email }}</td>
+                        <td><span style="font-family: var(--font-mono); font-size: 0.8rem;">{{ reservation.phone }}</span></td>
+                        <td style="text-align: right; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">
+                            {{ 'now'|date('M d, Y') }} {# Placeholder date as Reservation might not have createdAt #}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 4rem; color: var(--text-muted);">
+                            No reservations found for this event yet.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

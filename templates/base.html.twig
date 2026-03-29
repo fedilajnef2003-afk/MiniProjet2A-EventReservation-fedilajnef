@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			{% block title %}EventReserva
+			{% endblock %}
+		</title>
+		<link rel="stylesheet" href="/css/app.css"> {% block stylesheets %}{% endblock %}
+		</head>
+		<body>
+			<header>
+				<a href="{{ path('app_home') }}" class="logo">
+					<span>Event</span>Reserva
+				</a>
+				<nav>
+					<a href="{{ path('event_list') }}">Explore</a>
+					{% if is_granted('ROLE_ADMIN') %}
+						<a href="{{ path('admin_dashboard') }}">Admin Panel</a>
+					{% endif %}
+				</nav>
+				<div class="user-controls" style="display: flex; align-items: center; gap: 1.5rem;">
+					{% if app.user %}
+						<span class="er-badge er-badge-active" style="text-transform: none; font-size: 0.8rem;">
+							<span style="opacity: 0.6;">@</span>
+							{{ app.user.userIdentifier }}
+						</span>
+						<a href="{{ path('app_logout') }}" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.75rem;">Logout</a>
+					{% else %}
+						<a href="{{ path('app_login') }}" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.75rem;">Login</a>
+						<a href="{{ path('app_register') }}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.75rem;">Sign Up</a>
+					{% endif %}
+				</div>
+			</header>
+
+			<main>
+				{% for label, messages in app.flashes %}
+					{% for message in messages %}
+						<div class="alert alert-{{ label == 'error' ? 'error' : 'success' }} animate-up">
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endfor %}
+
+				{% block body %}{% endblock %}
+			</main>
+
+
+		</body>
+	</html>

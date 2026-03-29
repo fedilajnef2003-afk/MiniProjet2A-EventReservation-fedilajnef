@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reservation Confirmed | EventReserva{% endblock %}
+
+{% block body %}
+    <div class="card text-center" style="max-width: 600px; margin: 4rem auto; padding: 4rem 2rem;">
+        <div style="width: 80px; height: 80px; background: #ecfdf5; color: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 2rem;">
+            ✓
+        </div>
+        <h1 style="font-size: 2rem; margin-bottom: 1rem; letter-spacing: -0.025em;">Seat Reserved!</h1>
+        <p style="color: var(--zinc-500); font-size: 1.1rem; line-height: 1.6; margin-bottom: 2.5rem;">
+            Your reservation has been confirmed. A confirmation email will be sent to your inbox shortly. We can't wait to see you there!
+        </p>
+        
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a href="{{ path('event_list') }}" class="btn btn-primary" style="padding-left: 2rem; padding-right: 2rem;">Discover More</a>
+        </div>
+    </div>
+{% endblock %}

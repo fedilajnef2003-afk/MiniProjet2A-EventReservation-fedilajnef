@@ -1,0 +1,222 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Authentication | EventReserva{% endblock %}
+
+{% block body %}
+<div class="auth-page-container animate-up">
+    
+    <div class="auth-wrapper {% if is_register %}register-mode{% endif %} {% if is_admin %}admin-active{% endif %}" id="auth-master">
+        
+        {# ── FORMS CONTAINER ────────────────────────────────── #}
+        <div class="forms-container">
+            
+            {# Left Side: Client Flows #}
+            <div class="auth-side-container side-left">
+                {# Client Login #}
+                <div class="auth-form-box login-form">
+                    <p class="er-eyebrow">⬡ Welcome Back</p>
+                    <h1 class="er-title">Client <em>Login</em></h1>
+                    <form method="post" action="{{ path('app_login') }}" class="mt-4">
+                        {% if error and not is_admin %}
+                            <div class="alert alert-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        {% endif %}
+                        <div class="form-group mb-3">
+                            <label class="er-stat-label">Username</label>
+                            <input type="text" name="_username" value="{{ last_username }}" class="form-input" required autofocus>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="er-stat-label">Password</label>
+                            <input type="password" name="_password" class="form-input" required>
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <button class="btn btn-primary w-100 py-3" type="submit">Sign In</button>
+                        <p class="text-center mt-4" style="color: var(--text-secondary); font-size: 0.85rem;">
+                            New here? <button type="button" class="btn-link-toggle" onclick="toggleAuthMode()">Create account</button>
+                        </p>
+                    </form>
+                </div>
+                
+                {# Client Register #}
+                <div class="auth-form-box register-form">
+                    <p class="er-eyebrow">⬡ Join Us</p>
+                    <h1 class="er-title">Client <em>SignUp</em></h1>
+                    {{ form_start(clientRegForm, {'attr': {'class': 'mt-4'}}) }}
+                        <div class="form-group mb-3">
+                            {{ form_label(clientRegForm.username, 'Pick Username', {'label_attr': {'class': 'er-stat-label'}}) }}
+                            {{ form_widget(clientRegForm.username, {'attr': {'class': 'form-input'}}) }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ form_label(clientRegForm.plainPassword.first, 'Set Password', {'label_attr': {'class': 'er-stat-label'}}) }}
+                            {{ form_widget(clientRegForm.plainPassword.first, {'attr': {'class': 'form-input'}}) }}
+                        </div>
+                        <div class="form-group mb-4">
+                            {{ form_label(clientRegForm.plainPassword.second, 'Confirm', {'label_attr': {'class': 'er-stat-label'}}) }}
+                            {{ form_widget(clientRegForm.plainPassword.second, {'attr': {'class': 'form-input'}}) }}
+                        </div>
+                        <button class="btn btn-primary w-100 py-3" type="submit">Create Account</button>
+                        <p class="text-center mt-4" style="color: var(--text-secondary); font-size: 0.85rem;">
+                            Got an account? <button type="button" class="btn-link-toggle" onclick="toggleAuthMode()">Sign in</button>
+                        </p>
+                    {{ form_end(clientRegForm) }}
+                </div>
+            </div>
+
+            {# Right Side: Admin Flows #}
+            <div class="auth-side-container side-right">
+                {# Admin Login #}
+                <div class="auth-form-box login-form">
+                    <p class="er-eyebrow">⬡ Secure Access</p>
+                    <h1 class="er-title">Admin <em>Portal</em></h1>
+                    <form method="post" action="{{ path('app_login') }}" class="mt-4">
+                        {% if error and is_admin %}
+                            <div class="alert alert-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        {% endif %}
+                        <div class="form-group mb-3">
+                            <label class="er-stat-label">Admin ID</label>
+                            <input type="text" name="_username" value="{{ last_username }}" class="form-input" required>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="er-stat-label">Security Key</label>
+                            <input type="password" name="_password" class="form-input" required>
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <button class="btn btn-primary w-100 py-3" style="background: var(--amber);" type="submit">Unlock</button>
+                        <p class="text-center mt-4" style="color: var(--text-secondary); font-size: 0.85rem;">
+                            Need access? <button type="button" class="btn-link-toggle" onclick="toggleAuthMode()">Register admin</button>
+                        </p>
+                    </form>
+                </div>
+                
+                {# Admin Register #}
+                <div class="auth-form-box register-form">
+                    <p class="er-eyebrow">⬡ Administrative</p>
+                    <h1 class="er-title">Admin <em>Join</em></h1>
+                    {{ form_start(adminRegForm, {'attr': {'class': 'mt-4'}}) }}
+                        <div class="form-group mb-3">
+                            {{ form_label(adminRegForm.username, 'Admin Handle', {'label_attr': {'class': 'er-stat-label'}}) }}
+                            {{ form_widget(adminRegForm.username, {'attr': {'class': 'form-input'}}) }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ form_label(adminRegForm.plainPassword.first, 'Security Pass', {'label_attr': {'class': 'er-stat-label'}}) }}
+                            {{ form_widget(adminRegForm.plainPassword.first, {'attr': {'class': 'form-input'}}) }}
+                        </div>
+                        <div class="form-group mb-4">
+                            {{ form_label(adminRegForm.plainPassword.second, 'Confirm', {'label_attr': {'class': 'er-stat-label'}}) }}
+                            {{ form_widget(adminRegForm.plainPassword.second, {'attr': {'class': 'form-input'}}) }}
+                        </div>
+                        <button class="btn btn-primary w-100 py-3" style="background: var(--amber);" type="submit">Initiate Admin</button>
+                        <p class="text-center mt-4" style="color: var(--text-secondary); font-size: 0.85rem;">
+                            Back to Portal? <button type="button" class="btn-link-toggle" onclick="toggleAuthMode()">Portal Login</button>
+                        </p>
+                    {{ form_end(adminRegForm) }}
+                </div>
+            </div>
+        </div>
+
+        {# ── OVERLAY LAYER ───────────────────────────────────── #}
+        <div class="auth-overlay-container">
+            <div class="auth-overlay">
+                <div class="overlay-panel overlay-left">
+                    <h2 class="display-title">Client <em>Portal</em></h2>
+                    <p class="mb-5">Access your personal event space and manage your reservations effortlessly.</p>
+                    <button class="btn btn-outline" onclick="toggleRole()">Switch to Admin Portal</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h2 class="display-title">System <em>Admin</em></h2>
+                    <p class="mb-5">Manage events, attendance, and platform settings with powerful tools.</p>
+                    <button class="btn btn-outline" onclick="toggleRole()">Return to Client Access</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .btn-link-toggle {
+        background: none; border: none; color: var(--amber); 
+        font-weight: 700; cursor: pointer; padding: 0; font-size: inherit;
+    }
+    .btn-link-toggle:hover { text-decoration: underline; }
+
+    .auth-page-container {
+        display: flex; justify-content: center; align-items: center; min-height: 80vh;
+    }
+
+    .auth-wrapper {
+        position: relative; width: 850px; min-height: 600px;
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: var(--radius-lg); overflow: hidden;
+        box-shadow: var(--shadow-card), var(--shadow-glow);
+    }
+
+    /* Sides Structure */
+    .forms-container {
+        position: absolute; inset: 0; display: flex;
+    }
+
+    .auth-side-container {
+        width: 50%; height: 100%; position: relative; padding: 4rem;
+        display: flex; flex-direction: column; justify-content: center;
+    }
+
+    .auth-form-box {
+        position: absolute; inset: 0; padding: 4rem;
+        transition: all 0.5s ease-in-out;
+        display: flex; flex-direction: column; justify-content: center;
+    }
+
+    /* Mode Switching (Login vs Register) */
+    .login-form { opacity: 1; z-index: 2; transform: scale(1); }
+    .register-form { opacity: 0; z-index: 1; transform: scale(0.9) translateY(20px); pointer-events: none; }
+
+    .register-mode .login-form { opacity: 0; z-index: 1; transform: scale(0.9) translateY(-20px); pointer-events: none; }
+    .register-mode .register-form { opacity: 1; z-index: 2; transform: scale(1); pointer-events: all; }
+
+    /* Overlay Styling */
+    .auth-overlay-container {
+        position: absolute; top: 0; left: 50%; width: 50%; height: 100%;
+        overflow: hidden; transition: transform 0.6s ease-in-out; z-index: 100;
+        background: var(--bg);
+        border-radius: 0;
+    }
+
+    .admin-active .auth-overlay-container { transform: translateX(-100%); }
+
+    .auth-overlay {
+        background: linear-gradient(135deg, #11141d 0%, var(--surface-2) 100%);
+        color: var(--text-primary); position: relative; left: -100%;
+        height: 100%; width: 200%; transform: translateX(0);
+        transition: transform 0.6s ease-in-out;
+    }
+
+    .admin-active .auth-overlay { transform: translateX(50%); }
+
+    .overlay-panel {
+        position: absolute; display: flex; align-items: center; justify-content: center;
+        flex-direction: column; padding: 0 40px; text-align: center;
+        top: 0; height: 100%; width: 50%; transition: transform 0.6s ease-in-out;
+        box-sizing: border-box;
+    }
+
+    .overlay-left { transform: translateX(-20%); }
+    .admin-active .overlay-left { transform: translateX(0); }
+
+    .overlay-right { right: 0; transform: translateX(0); }
+    .admin-active .overlay-right { transform: translateX(20%); }
+
+    .display-title { font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 1.5rem; line-height: 1; }
+</style>
+
+<script>
+    const container = document.getElementById('auth-master');
+
+    function toggleRole() {
+        container.classList.toggle('admin-active');
+    }
+
+    function toggleAuthMode() {
+        container.classList.toggle('register-mode');
+    }
+</script>
+{% endblock %}

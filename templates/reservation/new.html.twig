@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reserve Seat | EventReserva{% endblock %}
+
+{% block body %}
+<div class="animate-up" style="max-width: 600px; margin: 0 auto;">
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ path('event_show', {'id': event.id}) }}" style="color: var(--amber); text-decoration: none; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+            ← Back to {{ event.title }}
+        </a>
+    </div>
+
+    <div class="card" style="padding: 3rem;">
+        <p class="er-eyebrow">⬡ Secure Booking</p>
+        <h1 class="er-title">Confirm <em>Reservation</em></h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2.5rem;">Please provide your details to finalize your seat for <strong>{{ event.title }}</strong>.</p>
+        
+        {{ form_start(reservationForm) }}
+            <div style="margin-bottom: 1.25rem;">
+                {{ form_label(reservationForm.name, 'Full Name', {'label_attr': {'class': 'er-stat-label', 'style': 'display: block; margin-bottom: 0.5rem; color: var(--text-muted);'}}) }}
+                {{ form_widget(reservationForm.name, {'attr': {'class': 'form-input', 'placeholder': 'John Doe'}}) }}
+            </div>
+            <div style="margin-bottom: 1.25rem;">
+                {{ form_label(reservationForm.email, 'Email Address', {'label_attr': {'class': 'er-stat-label', 'style': 'display: block; margin-bottom: 0.5rem; color: var(--text-muted);'}}) }}
+                {{ form_widget(reservationForm.email, {'attr': {'class': 'form-input', 'placeholder': 'john@example.com'}}) }}
+            </div>
+            <div style="margin-bottom: 2rem;">
+                {{ form_label(reservationForm.phone, 'Phone Number', {'label_attr': {'class': 'er-stat-label', 'style': 'display: block; margin-bottom: 0.5rem; color: var(--text-muted);'}}) }}
+                {{ form_widget(reservationForm.phone, {'attr': {'class': 'form-input', 'placeholder': '+1 (555) 000-0000'}}) }}
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1.25rem; font-size: 1.1rem; letter-spacing: 0.02em;">Complete Reservation</button>
+            <p style="text-align: center; margin-top: 1.5rem; font-size: 0.75rem; color: var(--text-muted);">By clicking "Complete Reservation", you agree to our terms of service.</p>
+        {{ form_end(reservationForm) }}
+    </div>
+</div>
+{% endblock %}

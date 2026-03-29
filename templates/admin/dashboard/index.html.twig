@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard | EventReserva{% endblock %}
+
+{% block body %}
+<div class="er-admin animate-up">
+
+  {# ── Header ──────────────────────────────────────────────── #}
+  <header class="er-header" style="background: transparent; border: none; padding: 0; margin-bottom: 3rem;">
+    <div>
+      <p class="er-eyebrow">⬡ EventReserva Platform</p>
+      <h1 class="er-title">Admin <em>Dashboard</em></h1>
+      <p style="color: var(--text-secondary); font-weight: 500;">Real-time overview of your platform's activity.</p>
+    </div>
+    <a href="{{ path('admin_event_new') }}" class="btn btn-primary">
+      <span style="font-size: 1.2rem;">＋</span> Create New Event
+    </a>
+  </header>
+
+  {# ── Stats ───────────────────────────────────────────────── #}
+  {% set total_seats = 0 %}
+  {% for e in events %}{% set total_seats = total_seats + e.seats %}{% endfor %}
+
+  <div class="er-stats">
+    <div class="er-stat">
+      <div class="er-stat-value">{{ events|length }}</div>
+      <div class="er-stat-label">Events Published</div>
+      <div style="position: absolute; bottom: 0; left: 0; width: 40%; height: 2px; background: var(--amber);"></div>
+    </div>
+    <div class="er-stat">
+      <div class="er-stat-value">{{ reservations_count }}</div>
+      <div class="er-stat-label">Global Reservations</div>
+      <div style="position: absolute; bottom: 0; left: 0; width: 40%; height: 2px; background: var(--amber);"></div>
+    </div>
+    <div class="er-stat">
+      <div class="er-stat-value">{{ total_seats }}</div>
+      <div class="er-stat-label">Seats Remaining</div>
+      <div style="position: absolute; bottom: 0; left: 0; width: 40%; height: 2px; background: var(--amber);"></div>
+    </div>
+  </div>
+
+  {# ── Recent Events Card ──────────────────────────────────── #}
+    <div class="er-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; border-bottom: 1px solid var(--border);">
+      <h2 style="font-family: var(--font-display); font-size: 1.4rem;">Recent Events</h2>
+      <a href="{{ path('admin_event_index') }}" style="color: var(--amber); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; text-decoration: none;">
+        Manage all →
+      </a>
+    </div>
+
+
+    <table class="er-table">
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Date</th>
+          <th>Seats</th>
+          <th style="text-align: right;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in events|slice(0, 5) %}
+          <tr>
+            <td><span style="font-weight: 700; color: var(--text-primary);">{{ event.title }}</span></td>
+            <td><span style="font-family: var(--font-mono); font-size: 0.8rem;">{{ event.date|date('M d, Y') }}</span></td>
+            <td><span style="font-family: var(--font-mono); font-weight: 700; color: var(--text-primary);">{{ event.seats }}</span></td>
+            <td style="text-align: right;">
+              {% if event.seats > 0 %}
+                <span class="er-badge er-badge-active">Active</span>
+              {% else %}
+                <span class="er-badge er-badge-sold">Sold Out</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="4" style="text-align: center; padding: 4rem; color: var(--text-muted);">
+              No events found. Start by creating your first event.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

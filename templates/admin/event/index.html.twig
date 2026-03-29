@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Manage Events | EventReserva Admin{% endblock %}
+
+{% block body %}
+<div class="er-admin animate-up">
+    <div class="er-header" style="background: transparent; border: none; padding: 0; margin-bottom: 3rem;">
+        <div>
+            <p class="er-eyebrow">⬡ Platform Control</p>
+            <h1 class="er-title">Event <em>Management</em></h1>
+            <p style="color: var(--text-secondary); font-weight: 500;">Complete overview and control of all platform events.</p>
+        </div>
+        <a href="{{ path('admin_event_new') }}" class="btn btn-primary">
+            <span style="font-size: 1.2rem;">＋</span> Add New Event
+        </a>
+    </div>
+
+    <div class="er-card">
+        <table class="er-table">
+            <thead>
+                <tr>
+                    <th>Event Details</th>
+                    <th>Scheduled Date</th>
+                    <th>Attendance</th>
+                    <th style="text-align: right;">Operations</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for event in events %}
+                <tr>
+                    <td>
+                        <div style="font-weight: 700; color: var(--text-primary);">{{ event.title }}</div>
+                        <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">ID: #{{ event.id|slice(0, 8) }}</div>
+                    </td>
+                    <td>
+                        <span style="font-family: var(--font-mono); font-size: 0.85rem;">{{ event.date ? event.date|date('M d, Y • H:i') : 'N/A' }}</span>
+                    </td>
+                    <td>
+                        <span class="er-badge {{ event.seats > 0 ? 'er-badge-active' : 'er-badge-sold' }}">
+                            {{ event.seats }} remaining
+                        </span>
+                    </td>
+                    <td style="text-align: right;">
+                        <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                            <a href="{{ path('admin_event_edit', {'id': event.id}) }}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">Edit</a>
+                            <a href="{{ path('admin_event_reservations', {'id': event.id}) }}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; border-color: var(--amber); color: var(--amber);">Tickets</a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 6rem; color: var(--text-muted);">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">📭</div>
+                        No events found in the database.
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 3rem;">
+        <a href="{{ path('admin_dashboard') }}" style="color: var(--amber); text-decoration: none; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+            ← Return to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

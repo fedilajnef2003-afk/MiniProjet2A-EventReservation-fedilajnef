@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Registration | EventReserva{% endblock %}
+
+{% block body %}
+    <div class="form-container admin-theme">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h1 class="form-title">Admin Access</h1>
+            <p style="color: var(--zinc-500);">Create a new administrator account for the platform.</p>
+        </div>
+
+        {{ form_start(registrationForm) }}
+            <div class="form-group">
+                {{ form_label(registrationForm.username, 'Admin Username', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.username, {'attr': {'class': 'form-input', 'placeholder': 'Select admin handle'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.plainPassword.first, 'Secure Password', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-input', 'placeholder': '••••••••'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.plainPassword.second, 'Confirm Password', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-input', 'placeholder': '••••••••'}}) }}
+            </div>
+
+            <button type="submit" class="btn btn-danger mt-3 btn-block" style="padding: 0.8rem;">Create Admin Account</button>
+        {{ form_end(registrationForm) }}
+        
+        <div style="margin-top: 1.5rem; text-align: center; font-size: 0.875rem; color: var(--zinc-500);">
+            Already have an account? <a href="{{ path('admin_login') }}" style="color: var(--error); font-weight: 700;">Admin Login</a>
+        </div>
+    </div>
+{% endblock %}
