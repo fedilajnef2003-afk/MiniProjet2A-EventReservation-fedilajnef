@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Admin;
 use App\Form\AdminRegistrationType;
 use App\Form\UserRegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,20 +34,23 @@ class AuthController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         // ── REGISTRATION LOGIC ────────────────────────────────
-        $user = new User();
-        $clientRegForm = $this->createForm(UserRegistrationType::class, $user, ['attr' => ['id' => 'client_reg_form']]);
-        $adminRegForm = $this->createForm(AdminRegistrationType::class, $user, ['attr' => ['id' => 'admin_reg_form']]);
-
+        // We create temporary objects for form bound
+        $client = new User();
+        $adminObj = new Admin();
+        
+        $clientRegForm = $this->createForm(UserRegistrationType::class, $client, ['attr' => ['id' => 'client_reg_form']]);
+        $adminRegForm = $this->createForm(AdminRegistrationType::class, $adminObj, ['attr' => ['id' => 'admin_reg_form']]);
+        
         // Handle Register POST
         $clientRegForm->handleRequest($request);
         $adminRegForm->handleRequest($request);
-
+        
         if ($clientRegForm->isSubmitted() && $clientRegForm->isValid()) {
-            return $this->processRegistration($user, $clientRegForm, $userPasswordHasher, $entityManager, false);
+            return $this->processRegistration($client, $clientRegForm, $userPasswordHasher, $entityManager, false);
         }
-
+        
         if ($adminRegForm->isSubmitted() && $adminRegForm->isValid()) {
-            return $this->processRegistration($user, $adminRegForm, $userPasswordHasher, $entityManager, true);
+            return $this->processRegistration($adminObj, $adminRegForm, $userPasswordHasher, $entityManager, true);
         }
 
         // Determine initial state based on route or request query
@@ -65,7 +69,7 @@ class AuthController extends AbstractController
         ]);
     }
 
-    private function processRegistration(User $user, $form, $hasher, $em, bool $isAdmin): Response
+    private function processRegistration($user, $form, $hasher, $em, bool $isAdmin): Response
     {
         $user->setRoles($isAdmin ? ['ROLE_ADMIN'] : ['ROLE_USER']);
         $user->setPassword($hasher->hashPassword($user, $form->get('plainPassword')->getData()));
@@ -73,7 +77,7 @@ class AuthController extends AbstractController
         $em->flush();
 
         $this->addFlash('success', 'Account created successfully. Please log in.');
-        return $this->redirectToRoute($isAdmin ? 'admin_login' : 'app_login');
+        return $this->redirectToRoute('app_login', ['admin' => $isAdmin ? '1' : '0']);
     }
 
     #[Route(path: '/logout', name: 'app_logout')]

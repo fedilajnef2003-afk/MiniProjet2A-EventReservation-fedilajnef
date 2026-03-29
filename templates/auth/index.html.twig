@@ -40,7 +40,7 @@
                 <div class="auth-form-box register-form">
                     <p class="er-eyebrow">⬡ Join Us</p>
                     <h1 class="er-title">Client <em>SignUp</em></h1>
-                    {{ form_start(clientRegForm, {'attr': {'class': 'mt-4'}}) }}
+                    {{ form_start(clientRegForm, {'action': path('app_register'), 'attr': {'class': 'mt-4'}}) }}
                         <div class="form-group mb-3">
                             {{ form_label(clientRegForm.username, 'Pick Username', {'label_attr': {'class': 'er-stat-label'}}) }}
                             {{ form_widget(clientRegForm.username, {'attr': {'class': 'form-input'}}) }}
@@ -91,7 +91,7 @@
                 <div class="auth-form-box register-form">
                     <p class="er-eyebrow">⬡ Administrative</p>
                     <h1 class="er-title">Admin <em>Join</em></h1>
-                    {{ form_start(adminRegForm, {'attr': {'class': 'mt-4'}}) }}
+                    {{ form_start(adminRegForm, {'action': path('app_register'), 'attr': {'class': 'mt-4'}}) }}
                         <div class="form-group mb-3">
                             {{ form_label(adminRegForm.username, 'Admin Handle', {'label_attr': {'class': 'er-stat-label'}}) }}
                             {{ form_widget(adminRegForm.username, {'attr': {'class': 'form-input'}}) }}

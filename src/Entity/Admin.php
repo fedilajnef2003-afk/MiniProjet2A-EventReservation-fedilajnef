@@ -43,7 +43,7 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password_hash;
     }
 
-    public function setPasswordHash(string $password_hash): static
+    public function setPassword(string $password_hash): static
     {
         $this->password_hash = $password_hash;
         return $this;
@@ -57,6 +57,12 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         return ['ROLE_ADMIN'];
+    }
+
+    public function setRoles(array $roles): static
+    {
+        // Admin roles are hardcoded, but we keep this for interface compatibility
+        return $this;
     }
 
     public function getPassword(): string
